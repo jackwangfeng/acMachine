@@ -7,6 +7,7 @@ import (
 	acMachine "github.com/jackwangfeng/acMachine"
 )
 
+
 func main() {
 	m := acMachine.NewAcMachine()
 	m.AddPatten("abc")
