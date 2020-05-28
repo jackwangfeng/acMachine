@@ -1,4 +1,4 @@
-package AcMachine
+package acMachine
 
 type AcNode struct {
 	tireNum  int
