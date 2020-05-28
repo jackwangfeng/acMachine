@@ -18,7 +18,7 @@ type AcMachine struct {
 }
 
 func NewAcMachine()*AcMachine{
-	return  &AcMachine{root:NewAcNode,} 
+	return  &AcMachine{root:NewAcNode(),} 
 }
 
 func (a *AcMachine) AddPatten(p string) {
