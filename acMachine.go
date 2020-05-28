@@ -1,12 +1,12 @@
 package acMachine
 
 type AcNode struct {
-	tireNum  int
-	value    rune
-	isPatten bool
-	father   *AcNode
-	fail     *AcNode
-	next     map[rune]*AcNode
+	tireNum   int
+	value     rune
+	isPattern bool
+	father    *AcNode
+	fail      *AcNode
+	next      map[rune]*AcNode
 }
 
 func NewAcNode() *AcNode {
@@ -17,11 +17,11 @@ type AcMachine struct {
 	root *AcNode
 }
 
-func NewAcMachine()*AcMachine{
-	return  &AcMachine{root:NewAcNode(),} 
+func NewAcMachine() *AcMachine {
+	return &AcMachine{root: NewAcNode()}
 }
 
-func (a *AcMachine) AddPatten(p string) {
+func (a *AcMachine) AddPattern(p string) {
 	chars := []rune(p)
 	if a.root == nil {
 		a.root = NewAcNode()
@@ -43,7 +43,7 @@ func (a *AcMachine) AddPatten(p string) {
 			f.next[chars[i]] = tmp
 		}
 		if i == pLen-1 {
-			tmp.isPatten = true
+			tmp.isPattern = true
 		}
 		f = tmp
 	}
@@ -81,7 +81,7 @@ func (a *AcMachine) Match(con string) (results []string, pos []int) {
 		}
 		v, ok := f.next[chars[i]]
 		if ok {
-			if v.isPatten {
+			if v.isPattern {
 				start := i - v.tireNum
 				str := string([]rune(con)[start : i+1])
 				pos = append(pos, start)
@@ -103,8 +103,8 @@ func (a *AcMachine) Match(con string) (results []string, pos []int) {
 /*
 func main() {
 	m := AcMachine{NewAcNode()}
-	m.AddPatten("abc")
-	m.AddPatten("cde")
+	m.AddPattern("abc")
+	m.AddPattern("cde")
 	m.Build()
 	results, pos := m.Match("abcdefabcdef")
 	cLen := len(results)
