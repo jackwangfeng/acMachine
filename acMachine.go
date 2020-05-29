@@ -1,7 +1,6 @@
 package acMachine 
 
 import "container/list"
-import "fmt"
 
 type AcNode struct {
 	tireNum   int
