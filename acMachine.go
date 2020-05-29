@@ -1,41 +1,45 @@
-package acMachine 
+package acmachine
 
 import "container/list"
 
-type AcNode struct {
+type acNode struct {
 	tireNum   int
 	value     rune
 	isPattern bool
-	father    *AcNode
-	fail      *AcNode
-	next      map[rune]*AcNode
+	father    *acNode
+	fail      *acNode
+	next      map[rune]*acNode
 }
 
-func NewAcNode() *AcNode {
-	return &AcNode{0, 0, false, nil, nil, make(map[rune]*AcNode)}
+//NewAcNode create a AcNode pointer.
+func newAcNode() *acNode {
+	return &acNode{0, 0, false, nil, nil, make(map[rune]*acNode)}
 }
 
+//AcMachine AcAutoMachine.
 type AcMachine struct {
-	root *AcNode
+	root *acNode
 }
 
+//NewAcMachine create a acMachine.
 func NewAcMachine() *AcMachine {
-	return &AcMachine{root: NewAcNode()}
+	return &AcMachine{root: newAcNode()}
 }
 
+//AddPattern add a pattern
 func (a *AcMachine) AddPattern(p string) {
 	chars := []rune(p)
 	if a.root == nil {
-		a.root = NewAcNode()
+		a.root = newAcNode()
 	}
 	f := a.root
 	pLen := len(chars)
 	for i := 0; i < pLen; i++ {
 		var ok bool
-		var tmp *AcNode
+		var tmp *acNode
 		tmp, ok = f.next[chars[i]]
 		if !ok {
-			tmp = NewAcNode()
+			tmp = newAcNode()
 			tmp.tireNum = i
 			tmp.value = chars[i]
 			tmp.father = f
@@ -51,7 +55,7 @@ func (a *AcMachine) AddPattern(p string) {
 	}
 }
 
-func (a *AcMachine) getFail(node *AcNode) {
+func (a *AcMachine) getFail(node *acNode) {
 	if node.father != a.root {
 		tmpNode, ok := node.father.fail.next[node.value]
 		if ok {
@@ -65,7 +69,7 @@ func (a *AcMachine) getFail(node *AcNode) {
 	}
 }
 
-//用递归深度搜索
+//Build 用递归深度搜索
 func (a *AcMachine) Build() {
 	//build tired tree
 	for _, v := range a.root.next {
@@ -73,13 +77,13 @@ func (a *AcMachine) Build() {
 	}
 }
 
-//使用压栈方式实现深度遍历
+//Build2 使用压栈方式实现深度遍历
 func (a *AcMachine) Build2() {
 	stack := list.New()
 	stack.PushFront(a.root)
 	for stack.Len() > 0 {
 		tmp := stack.Front()
-		node := tmp.Value.(*AcNode)
+		node := tmp.Value.(*acNode)
 		stack.Remove(tmp)
 		if node != a.root && node.father != a.root {
 			tmpNode, ok := node.father.fail.next[node.value]
@@ -95,14 +99,14 @@ func (a *AcMachine) Build2() {
 	}
 }
 
-//使用广度搜索
+//Build1 使用广度搜索
 func (a *AcMachine) Build1() {
-	queue := []*AcNode{}
+	queue := []*acNode{}
 	queue = append(queue, a.root)
 	for len(queue) > 0 {
 		//把quue的节点都拿出来, 求每个节点的fail节点
 		tmpLen := len(queue)
-		tmpQueue := make([]*AcNode, tmpLen)
+		tmpQueue := make([]*acNode, tmpLen)
 		copy(tmpQueue, queue)
 		queue = queue[0:0]
 		for i := 0; i < tmpLen; i++ {
@@ -121,6 +125,7 @@ func (a *AcMachine) Build1() {
 	}
 }
 
+//Match 匹配接口
 func (a *AcMachine) Match(con string) (results []string, pos []int) {
 	chars := []rune(con)
 	cLen := len(chars)
