@@ -56,7 +56,7 @@ func (a *AcMachine) AddPattern(p string) {
 }
 
 func (a *AcMachine) getFail(node *acNode) {
-	if node.father != a.root {
+	if node != a.root && node.father != a.root {
 		tmpNode, ok := node.father.fail.next[node.value]
 		if ok {
 			node.fail = tmpNode
@@ -72,9 +72,7 @@ func (a *AcMachine) getFail(node *acNode) {
 //Build 用递归深度搜索
 func (a *AcMachine) Build() {
 	//build tired tree
-	for _, v := range a.root.next {
-		a.getFail(v)
-	}
+	a.getFail(a.root)
 }
 
 //Build2 使用压栈方式实现深度遍历
