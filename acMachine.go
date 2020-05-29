@@ -1,5 +1,7 @@
 package acMachine
 
+import "fmt"
+
 type AcNode struct {
 	tireNum   int
 	value     rune
@@ -63,10 +65,37 @@ func (a *AcMachine) getFail(node *AcNode) {
 	}
 }
 
+//用递归深度搜索
 func (a *AcMachine) Build() {
 	//build tired tree
 	for _, v := range a.root.next {
 		a.getFail(v)
+	}
+}
+
+//使用广度搜索
+func (a *AcMachine) Build1() {
+	queue := []*AcNode{}
+	queue = append(queue, a.root)
+	for len(queue) > 0 {
+		//把quue的节点都拿出来, 求每个节点的fail节点
+		tmpLen := len(queue)
+		tmpQueue := make([]*AcNode, tmpLen)
+		copy(tmpQueue, queue)
+		queue = queue[0:0]
+		for i := 0; i < tmpLen; i++ {
+			if tmpQueue[i] != a.root && tmpQueue[i].father != a.root {
+				tmpNode, ok := tmpQueue[i].father.fail.next[tmpQueue[i].value]
+				if ok {
+					tmpQueue[i].fail = tmpNode
+				} else {
+					tmpQueue[i].fail = a.root
+				}
+			}
+			for _, v := range tmpQueue[i].next {
+				queue = append(queue, v)
+			}
+		}
 	}
 }
 
