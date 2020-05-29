@@ -1,5 +1,6 @@
-package acMachine
+package acMachine 
 
+import "container/list"
 import "fmt"
 
 type AcNode struct {
@@ -73,6 +74,28 @@ func (a *AcMachine) Build() {
 	}
 }
 
+//使用压栈方式实现深度遍历
+func (a *AcMachine) Build2() {
+	stack := list.New()
+	stack.PushFront(a.root)
+	for stack.Len() > 0 {
+		tmp := stack.Front()
+		node := tmp.Value.(*AcNode)
+		stack.Remove(tmp)
+		if node != a.root && node.father != a.root {
+			tmpNode, ok := node.father.fail.next[node.value]
+			if ok {
+				node.fail = tmpNode
+			} else {
+				node.fail = a.root
+			}
+		}
+		for _, v := range node.next {
+			stack.PushFront(v)
+		}
+	}
+}
+
 //使用广度搜索
 func (a *AcMachine) Build1() {
 	queue := []*AcNode{}
@@ -134,7 +157,7 @@ func main() {
 	m := AcMachine{NewAcNode()}
 	m.AddPattern("abc")
 	m.AddPattern("cde")
-	m.Build()
+	m.Build2()
 	results, pos := m.Match("abcdefabcdef")
 	cLen := len(results)
 	for i := 0; i < cLen; i++ {
