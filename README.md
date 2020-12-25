@@ -1,1 +1,1 @@
-How to use the sof , see the example 
+How to use the software , see the example 
